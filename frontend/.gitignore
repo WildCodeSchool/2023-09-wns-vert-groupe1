@@ -37,6 +37,10 @@ next-env.d.ts
 
 #logs
 /logs
+
+#swc
+/.swc/
+
 /test-results/
 /playwright-report/
 /blob-report/

@@ -48,7 +48,7 @@ export class PoiResolver {
 		}
 
 		if (poiData.address !== undefined) {
-			const coordinates = await GeoCodingService.getCoordinates(
+			const coordinates = await GeoCodingService.getCoordinatesByAddress(
 				poiData.address
 			);
 			if (coordinates) {
@@ -89,7 +89,7 @@ export class PoiResolver {
 			}
 
 			if (newPoiInput.address !== undefined) {
-				const coordinates = await GeoCodingService.getCoordinates(
+				const coordinates = await GeoCodingService.getCoordinatesByAddress(
 					newPoiInput.address
 				);
 				if (coordinates) {

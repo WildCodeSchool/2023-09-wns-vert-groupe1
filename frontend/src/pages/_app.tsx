@@ -13,7 +13,6 @@ import { setContext } from "@apollo/client/link/context";
 import { Layout } from "@components";
 import "../styles/globals.css";
 import { UserProvider } from "../context/UserContext";
-import useWindowDimensions from "../utils/windowDimensions";
 
 const backend_url =
 	process.env.NODE_ENV === "development"
@@ -40,12 +39,11 @@ const client = new ApolloClient({
 });
 
 function App({ Component, pageProps }: AppProps) {
-	const { height, width } = useWindowDimensions();
 	return (
 		<ApolloProvider client={client}>
 			<UserProvider>
 				<Layout>
-					<Component style={{ height: height - 120 }} {...pageProps} />
+					<Component {...pageProps} />
 				</Layout>
 				<ToastContainer />
 			</UserProvider>

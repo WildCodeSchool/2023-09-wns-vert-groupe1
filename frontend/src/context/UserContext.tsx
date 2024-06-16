@@ -138,7 +138,6 @@ function UserProvider({ children }: PropsWithChildren) {
 		}),
 		[user, jwt, error, onLogin, setUser, setError, onLogout, isAuthenticated]
 	);
-
 	return (
 		<UserContext.Provider value={initialState}>{children}</UserContext.Provider>
 	);

@@ -18,7 +18,7 @@ export class City extends BaseEntity {
   id: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   @Length(1, 255)
   name: string;
 

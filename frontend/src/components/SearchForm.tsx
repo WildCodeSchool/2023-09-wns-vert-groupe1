@@ -36,16 +36,14 @@ export const SearchForm = () => {
 			sx={{
 				padding: `${mainTheme.spacing(3)} ${mainTheme.spacing(3)} ${mainTheme.spacing(3)} ${mainTheme.spacing(7)}`,
 				display: "flex",
+				flexDirection: "row",
 				alignItems: "center",
-				justifyContent: "space-between",
-				flexWrap: "wrap",
+				justifyContent: "space-around",
 				borderRadius: "45px",
 				boxShadow: "0px 5px 12px rgba(0, 0, 0, 0.15)",
-				maxWidth: "500px",
 			}}
 		>
 			<SearchInput
-				label="Ville"
 				name="city"
 				value={city}
 				onChange={handleChange}

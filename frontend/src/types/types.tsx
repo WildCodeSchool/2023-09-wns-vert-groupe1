@@ -25,7 +25,6 @@ export type CityInput = {
 	description: string;
 	lat?: number;
 	lon?: number;
-	images: string[];
 };
 export type RatingType = {
 	id: number;

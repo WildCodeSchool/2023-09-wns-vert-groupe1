@@ -1,14 +1,30 @@
 import { City } from "../entities";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { CityUpdateInput, CityInput } from "../inputs";
+import { GeoCodingService } from "../services";
 import { redisClient } from "../index";
 
 @Resolver()
 export class CityResolver {
   @Query(() => [City])
-  async getAllCities() {
-    const result = await City.find({ relations: ["pois"] });
-    return result;
+  async getAllCities(
+    @Arg("offset", () => Number, { nullable: true })
+    offset: number,
+    @Arg("limit", () => Number, { nullable: true })
+    limit: number
+  ): Promise<City[]> {
+    try {
+      const result = await City.find({
+        relations: ["pois"],
+        skip: offset,
+        take: limit,
+        order: { name: "ASC" },
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to fetch cities");
+    }
   }
 
   @Query(() => City)
@@ -38,7 +54,6 @@ export class CityResolver {
       const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
       const cacheResult = await redisClient.get(capitalizedName);
       if (cacheResult !== null) {
-        console.log("from cache");
         return JSON.parse(cacheResult);
       } else {
         const result = await City.findOne({
@@ -64,12 +79,24 @@ export class CityResolver {
   async createNewCity(@Arg("cityData") cityData: CityInput) {
     const pois = cityData.pois ? cityData.pois.map((poi) => ({ id: poi })) : [];
 
+    const coordinates = await GeoCodingService.getCoordinatesByCity(
+      cityData.name
+    );
+
     const city = await City.create({
       ...cityData,
+      lat: coordinates?.latitude,
+      lon: coordinates?.longitude,
       pois: pois,
     }).save();
 
     return city;
+  }
+
+  @Mutation(() => String)
+  async deleteAllCities() {
+    City.delete({});
+    return "All cities deleted";
   }
 
   @Mutation(() => String)

@@ -4,25 +4,28 @@ import { useRouter } from "next/router";
 import { GET_CITY_BY_NAME } from "@queries";
 import { PoiCard, SearchForm, CityMap, Tag } from "@components";
 import { CategoryType, CityType, PoiType } from "@types";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { mainTheme } from "@theme";
+import { toast } from "react-toastify";
+
+const defaultState: CityType = {
+	name: "",
+	description: "",
+	pois: [],
+	lat: undefined,
+	lon: undefined,
+};
 
 const SearchResults = () => {
 	const latFrance = 46.603354;
 	const lonFrance = 1.888334;
 	const router = useRouter();
-	const [searchedCity, setSearchedCity] = useState<CityType>({
-		name: "",
-		description: "",
-		pois: [],
-		lat: undefined,
-		lon: undefined,
-	});
+	const [searchedCity, setSearchedCity] = useState<CityType>(defaultState);
 	const [activePoiId, setActivePoiId] = useState<number | null>(null);
 	const [categoryTags, setCategoryTags] = useState<CategoryType[]>([]);
 	const [activeCategories, setActiveCategories] = useState<string[]>([]);
 	const [filteredPois, setFilteredPois] = useState<PoiType[]>([]);
-	const [dataFetched, setDataFetched] = useState(false);
+	const [dataFetched, setDataFetched] = useState<boolean>(false);
 
 	const { loading, error, data } = useQuery(GET_CITY_BY_NAME, {
 		variables: { name: router.query.keyword },
@@ -30,18 +33,13 @@ const SearchResults = () => {
 
 	useEffect(() => {
 		if (error) {
-			console.error("Error fetching city:", error.message);
-			setSearchedCity({
-				name: "",
-				description: "",
-				pois: [],
-				lat: latFrance,
-				lon: lonFrance,
-			});
+			toast.error("Une erreur est survenue lors de la recherche.");
+			searchedCity ?? setSearchedCity(defaultState);
 			setDataFetched(true);
 		}
 
 		if (!loading && data && data.getCityByName) {
+			console.log(data.getCityByName);
 			const cityData = data.getCityByName;
 			setSearchedCity({
 				id: cityData.id,
@@ -109,19 +107,23 @@ const SearchResults = () => {
 	};
 
 	return loading ? (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				minHeight: "200px",
-			}}
-		>
-			<CircularProgress />
-		</div>
+		<CircularProgress />
 	) : (
-		<Box display="flex">
-			<Box flex="1" maxHeight="100vh" overflow="auto">
+		<Grid
+			container
+			display="flex"
+			flexGrow={1}
+			sx={{ sm: "column", md: "column", lg: "row", xl: "row" }}
+		>
+			<Grid
+				item
+				display="grid"
+				flex="1"
+				maxHeight={window.innerHeight - 120}
+				overflow="auto"
+				alignContent="flex-start"
+				gap={4}
+			>
 				<Box padding={mainTheme.spacing(6)}>
 					<SearchForm />
 				</Box>
@@ -129,8 +131,7 @@ const SearchResults = () => {
 					display="flex"
 					alignItems="center"
 					gap={mainTheme.spacing(3)}
-					paddingLeft={mainTheme.spacing(6)}
-					paddingRight={mainTheme.spacing(6)}
+					paddingX={mainTheme.spacing(6)}
 				>
 					<Tag
 						key={"category-tag-all-categories"}
@@ -148,7 +149,12 @@ const SearchResults = () => {
 					))}
 				</Box>
 				{searchedCity.name !== "" && data!! ? (
-					<Box padding={mainTheme.spacing(6)}>
+					<Box
+						padding={mainTheme.spacing(6)}
+						display="flex"
+						flexDirection="column"
+						gap={6}
+					>
 						<Typography
 							sx={{
 								color: mainTheme.palette.primary.dark,
@@ -158,18 +164,26 @@ const SearchResults = () => {
 						>
 							{searchedCity.name} ({filteredPois.length})
 						</Typography>
-						{filteredPois?.map((poi) => (
-							<PoiCard
-								id={poi.id}
-								key={poi.id}
-								name={poi.name}
-								images={poi.images}
-								category={poi.category}
-								description={poi.description}
-								onMouseOver={() => handleMouseOverPoi(poi.id)}
-								onMouseOut={handleMouseOutPoi}
-							/>
-						))}
+						{filteredPois.length > 0 ? (
+							<>
+								{filteredPois?.map((poi) => (
+									<PoiCard
+										id={poi.id}
+										key={poi.id}
+										name={poi.name}
+										images={poi.images}
+										category={poi.category}
+										description={poi.description}
+										onMouseOver={() => handleMouseOverPoi(poi.id)}
+										onMouseOut={handleMouseOutPoi}
+									/>
+								))}
+							</>
+						) : (
+							<Typography>
+								Cette ville ne possède pas encore de point d&apos;intérêt.
+							</Typography>
+						)}
 					</Box>
 				) : (
 					dataFetched && (
@@ -184,17 +198,19 @@ const SearchResults = () => {
 						</Typography>
 					)
 				)}
-			</Box>
-			{dataFetched && (
-				<CityMap
-					lat={searchedCity.lat}
-					lon={searchedCity.lon}
-					pois={searchedCity.pois}
-					activePoiId={activePoiId}
-					onMarkerClick={(poiId) => scrollToPoi(poiId)}
-				/>
-			)}
-		</Box>
+			</Grid>
+			<Grid item flex="1" display="grid">
+				{dataFetched && (
+					<CityMap
+						lat={searchedCity.lat}
+						lon={searchedCity.lon}
+						pois={searchedCity.pois}
+						activePoiId={activePoiId}
+						onMarkerClick={(poiId) => scrollToPoi(poiId)}
+					/>
+				)}
+			</Grid>
+		</Grid>
 	);
 };
 
