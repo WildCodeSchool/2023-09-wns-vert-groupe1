@@ -16,7 +16,7 @@ export const Header = () => {
 	const router = useRouter();
 
 	return (
-		<AppBar position="static">
+		<AppBar position="static" sx={{ zIndex: 10000 }}>
 			<Toolbar
 				sx={{
 					boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",

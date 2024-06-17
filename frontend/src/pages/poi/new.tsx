@@ -154,7 +154,7 @@ const NewPoi = () => {
 							align="center"
 							sx={{ fontSize: mainTheme.typography.h4, fontWeight: "bold" }}
 						>
-							Ajouter un POI
+							Ajouter un point d'intérêt
 						</Typography>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>

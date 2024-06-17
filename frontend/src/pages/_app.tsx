@@ -13,6 +13,7 @@ import { setContext } from "@apollo/client/link/context";
 import { Layout } from "@components";
 import "../styles/globals.css";
 import { UserProvider } from "../context/UserContext";
+import { RefetchProvider } from "../context/RefetchContext";
 import useWindowDimensions from "../utils/windowDimensions";
 
 const backend_url =
@@ -44,9 +45,11 @@ function App({ Component, pageProps }: AppProps) {
 	return (
 		<ApolloProvider client={client}>
 			<UserProvider>
-				<Layout>
-					<Component style={{ height: height - 120 }} {...pageProps} />
-				</Layout>
+				<RefetchProvider>
+					<Layout>
+						<Component style={{ height: height - 120 }} {...pageProps} />
+					</Layout>
+				</RefetchProvider>
 				<ToastContainer />
 			</UserProvider>
 		</ApolloProvider>

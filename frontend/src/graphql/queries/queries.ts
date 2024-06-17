@@ -98,3 +98,34 @@ export const GET_USER = gql`
 		}
 	}
 `;
+
+export const GET_ALL_USERS = gql`
+	query GetAllUsers {
+		getAllUsers {
+			id
+			firstName
+			lastName
+			email
+			role
+			city {
+				name
+			}
+		}
+	}
+`;
+
+export const GET_ALL_POIS = gql`
+	query getAllPois {
+		getAllPois {
+			name
+			address
+			postalCode
+			description
+			images
+			category {
+				id
+				name
+			}
+		}
+	}
+`;

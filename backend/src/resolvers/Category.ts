@@ -26,10 +26,8 @@ export class CategoryResolver {
 
 	@Mutation(() => String)
 	async deleteCategoryById(@Arg("id") id: number) {
-		const categoryToDelete = await Category.findOneByOrFail({
-			id: id,
-		});
-		categoryToDelete.remove();
+		const categoryToDelete = await Category.findOneByOrFail({ id: id });
+		await categoryToDelete.remove();
 		return "The Category has been deleted";
 	}
 }
