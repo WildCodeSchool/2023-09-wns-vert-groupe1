@@ -11,3 +11,16 @@ jobs:
 
       - name: Go to frontend and run tests
         run: cd frontend && npm i && npm run test
+  
+  test-back:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Go to backend and run tests
+        run: cd backend && npm i && npm run test
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      
+     

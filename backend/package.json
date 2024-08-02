@@ -4,12 +4,12 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "ts-node-dev ./src/index.ts",
 		"build": "tsc",
 		"startprod": "node ./dist/index.js",
 		"typeorm": "typeorm-ts-node-commonjs -d ./src/config/db.ts",
-		"migration:generate": "npm run typeorm migration:generate src/config/migrations/migration"
+		"migration:generate": "npm run typeorm migration:generate src/config/migrations/migration",
+		"test": "jest"
 	},
 	"repository": {
 		"type": "git",
@@ -23,15 +23,19 @@
 	"homepage": "https://github.com/WildCodeSchool/2023-09-wns-vert-groupe1#readme",
 	"dependencies": {
 		"@apollo/server": "^4.9.5",
+		"@jest/globals": "^29.7.0",
+		"@types/jest": "^29.5.12",
 		"argon2": "^0.31.2",
 		"class-validator": "^0.14.0",
 		"cors": "^2.8.5",
 		"graphql": "^16.8.1",
 		"graphql-scalars": "^1.22.4",
+		"jest": "^29.7.0",
 		"jsonwebtoken": "^9.0.2",
 		"pg": "^8.11.3",
 		"redis": "^4.6.14",
 		"reflect-metadata": "^0.1.13",
+		"ts-jest": "^29.2.4",
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
 		"type-graphql": "^2.0.0-beta.3",
