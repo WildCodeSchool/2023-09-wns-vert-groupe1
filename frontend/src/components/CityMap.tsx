@@ -2,6 +2,14 @@
 import { Map, Marker } from "react-map-gl";
 import { CityType } from "@types";
 import { mainTheme } from "@theme";
+import { SvgIconProps, useMediaQuery } from "@mui/material";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
+import LocalHotelIcon from "@mui/icons-material/LocalHotel";
+import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import AttractionsIcon from "@mui/icons-material/Attractions";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import MuseumIcon from "@mui/icons-material/Museum";
 
 type CityMapProps = CityType & {
 	activePoiId: number | null;
@@ -20,14 +28,51 @@ export const CityMap = ({
 	const handleMarkerClick = (poiId: number) => {
 		onMarkerClick(poiId);
 	};
+	const isTabletOrMobile = useMediaQuery(mainTheme.breakpoints.down("lg"));
+
+	const getIconByCategory = (
+		category: string | undefined,
+		isActive: boolean
+	): React.ReactElement<SvgIconProps> => {
+		const iconStyle = {
+			fontSize: isActive ? 40 : 30,
+			color: isActive
+				? mainTheme.palette.primary.main
+				: mainTheme.palette.primary.light,
+		};
+
+		switch (category) {
+			case "Restaurants":
+				return <RestaurantIcon style={iconStyle} />;
+			case "Monuments":
+				return <LocationCityIcon style={iconStyle} />;
+			case "Hotel":
+				return <LocalHotelIcon style={iconStyle} />;
+			case "Cafe":
+				return <LocalCafeIcon style={iconStyle} />;
+			case "Attraction":
+				return <AttractionsIcon style={iconStyle} />;
+			case "Musées":
+				return <MuseumIcon style={iconStyle} />;
+			default:
+				return <HelpOutlineIcon style={iconStyle} />;
+		}
+	};
 
 	return (
 		<Map
 			key={key}
 			mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}
-			latitude={lat}
-			longitude={lon}
-			zoom={10}
+			initialViewState={{
+				latitude: lat,
+				longitude: lon,
+				zoom: isTabletOrMobile ? 11 : 12,
+			}}
+			scrollZoom={true}
+			dragPan={true}
+			dragRotate={true}
+			doubleClickZoom={true}
+			touchZoomRotate={true}
 			mapStyle="mapbox://styles/mapbox/dark-v11"
 		>
 			{pois &&
@@ -42,19 +87,12 @@ export const CityMap = ({
 								longitude={poi.longitude}
 								onClick={() => handleMarkerClick(poi.id)}
 							>
-								<svg
-									height={poi.id === activePoiId ? "30" : "25"}
-									viewBox="0 0 24 24"
-									style={{
-										cursor: "pointer",
-										fill: mainTheme.palette.primary.light,
-										opacity: poi.id === activePoiId ? 1 : 0.63,
-										stroke: "none",
-										transform: "translate(-12px, -24px)",
-									}}
-								>
-									<circle cx="12" cy="12" r="10" />
-								</svg>
+								<div>
+									{getIconByCategory(
+										poi.category?.name,
+										poi.id === activePoiId
+									)}
+								</div>
 							</Marker>
 						)
 				)}

@@ -14,6 +14,9 @@ import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
 import { UserUpdateInput } from "../inputs/UserUpdate";
 import { GraphQLError } from "graphql";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 if (!process.env.SECRET_KEY) {
 	throw new Error("SECRET_KEY environment variable is not defined");

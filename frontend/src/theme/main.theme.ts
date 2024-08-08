@@ -64,4 +64,13 @@ export const mainTheme = createTheme({
 		},
 	},
 	spacing: [0, 4, 8, 12, 16, 20, 24, 30, 38, 48, 56],
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 600,
+			md: 1024,
+			lg: 1280,
+			xl: 1536,
+		},
+	},
 });

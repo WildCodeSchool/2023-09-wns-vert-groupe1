@@ -1,12 +1,14 @@
 import { ReactNode } from "react";
 import { Header } from "./Header";
-import { ThemeProvider, Stack } from "@mui/material";
+import { ThemeProvider, Stack, useMediaQuery } from "@mui/material";
 import { mainTheme } from "@theme";
 import Footer from "./Footer";
 import React from "react";
 import { UserProvider } from "../context";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
+	const isDesktop = useMediaQuery(mainTheme.breakpoints.up("lg"));
+
 	return (
 		<UserProvider>
 			<ThemeProvider theme={mainTheme}>
@@ -28,7 +30,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 					>
 						{children}
 					</Stack>
-					<Footer />
+					{isDesktop && <Footer />}
 				</main>
 			</ThemeProvider>
 		</UserProvider>
